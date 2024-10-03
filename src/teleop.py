@@ -30,11 +30,11 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
         key = getkey()
-        if (key=='a'):
+        if (key=='a') or (key=='4'):
             target[1] = 1
-        if (key=='d'):
+        if (key=='d') or (key=='6'):
             target[1] = -1
-        if (key=='s'):
+        if (key=='s') or (key=='2'):
             target[0] = -1
-        if (key=='w'):
+        if (key=='w') or (key=='8'):
             target[0] = 1
