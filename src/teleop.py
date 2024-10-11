@@ -3,6 +3,7 @@
 import rospy
 from geometry_msgs.msg import Twist
 from getkey import getkey
+from std_srvs.srv import Empty
 
 target = [0, 0]
 
@@ -21,8 +22,13 @@ class Teleop:
         self.pub.publish(msg)
         target = [0,0]
 
-def on_press(key):
-    print('{0} pressed'.format(        key))
+    def clear(self):
+        try:
+            req = rospy.ServiceProxy('clear', Empty)
+            res = req()
+        except Exception as e:
+            rospy.logwarn("Service call error: '%s'", e)
+
 
 if __name__ == '__main__':
     rospy.init_node('mgtu_teleop')
@@ -38,3 +44,5 @@ if __name__ == '__main__':
             target[0] = -1
         if (key=='w') or (key=='8'):
             target[0] = 1
+        if (key=='r'):
+            teleop.clear()
