@@ -52,15 +52,9 @@ class Teleop:
             
     def kill(self):
         try:
-            req = rospy.ServiceProxy('kill', Kill)
-            if self.tc==0:
-                res = req(
-                     f"turtle_{self.tc}"
-            )
-            else:
-                res = req(
-                     f"turtle_{self.tc}"
-            )
+            if self.tc>0:
+                req = rospy.ServiceProxy('kill', Kill)
+                res = req(f"turtle_{self.tc}")
                 self.tc-=1
         except Exception as e:
             rospy.logwarn("Service call error: '%s'", e)    
