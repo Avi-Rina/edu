@@ -10,6 +10,7 @@ from turtlesim.srv import Kill
 from mgtu_anm24.srv import Go , GoResponse
 
 target = [0, 0]
+velocity = 1.0
 
 class Teleop:
     tc = 0
@@ -69,16 +70,19 @@ if __name__ == '__main__':
     rospy.init_node('mgtu_teleop')
     teleop = Teleop()
 
+    velocity = rospy.get_param("~velocity", 1.0)
+    rospy.loginfo(velocity)
+
     while not rospy.is_shutdown():
         key = getkey()
         if (key=='a') or (key=='ф') or (key=='4'):
-            target[1] = 1
+            target[1] = velocity
         if (key=='d') or (key=='в') or (key=='6'):
-            target[1] = -1
+            target[1] = -velocity
         if (key=='s') or (key=='ы') or (key=='2'):
-            target[0] = -1
+            target[0] = -velocity
         if (key=='w') or (key=='ц') or (key=='8'):
-            target[0] = 1
+            target[0] = velocity
         if (key=='c'):
             teleop.clear()
         if (key=='n'):
