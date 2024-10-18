@@ -36,13 +36,13 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
         key = getkey()
-        if (key=='a') or (key=='4'):
+        if (key=='a') or (key=='ф'):
             target[1] = 1
-        if (key=='d') or (key=='6'):
+        if (key=='d') or (key=='в'):
             target[1] = -1
-        if (key=='s') or (key=='2'):
+        if (key=='s') or (key=='ы'):
             target[0] = -1
-        if (key=='w') or (key=='8'):
+        if (key=='w') or (key=='ц'):
             target[0] = 1
         if (key=='r'):
             teleop.clear()
