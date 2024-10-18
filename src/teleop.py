@@ -6,6 +6,7 @@ from geometry_msgs.msg import Twist
 from getkey import getkey
 from std_srvs.srv import Empty
 from turtlesim.srv import Spawn
+from turtlesim.srv import Kill
 #from mgtu_anm24.srv import Go , GoResponse
 
 target = [0, 0]
@@ -39,6 +40,7 @@ class Teleop:
         try:
             req = rospy.ServiceProxy('spawn', Spawn)
             self.tc+=1
+
             res = req(
                 random.randrange(0,11)+random.randrange(0,100)/100,
                 random.randrange(0,11)+random.randrange(0,100)/100,
@@ -47,6 +49,20 @@ class Teleop:
             )
         except Exception as e:
             rospy.logwarn("Service call error: '%s'", e)
+    def kill(self):
+        try:
+            req = rospy.ServiceProxy('kill', Kill)
+            if self.tc==0:
+                res = req(
+                     f"turtle_{self.tc}"
+            )
+            else:
+                res = req(
+                     f"turtle_{self.tc}"
+            )
+                self.tc-=1
+        except Exception as e:
+            rospy.logwarn("Service call error: '%s'", e)    
 
     #def cb_serv_go(self, value):
         #resp = GoResponse()
@@ -72,4 +88,6 @@ if __name__ == '__main__':
             teleop.clear()
         if (key=='n'):
             teleop.new()
+        if (key=='k'):
+            teleop.kill()
         
