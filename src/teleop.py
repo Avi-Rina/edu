@@ -6,7 +6,7 @@ from geometry_msgs.msg import Twist
 from getkey import getkey
 from std_srvs.srv import Empty
 from turtlesim.srv import Spawn
-from mgtu_anm24.srv import Go, GoResponse
+#from mgtu_anm24.srv import Go , GoResponse
 
 target = [0, 0]
 
@@ -17,7 +17,7 @@ class Teleop:
         rospy.loginfo("Hi!")
         rospy.Timer(rospy.Duration(0.1),self._t)
         self.pub = rospy.Publisher("/turtle1/cmd_vel", Twist)
-        self.go_serv = rospy.Service('go',Go, self.cb_serv_go)
+        #self.go_serv = rospy.Service('go',Go, self.cb_serv_go)
 
     def _t(self, event):
         global target
@@ -48,11 +48,11 @@ class Teleop:
         except Exception as e:
             rospy.logwarn("Service call error: '%s'", e)
 
-    def cb_serv_go(self, value):
-        resp = GoResponse()
-        resp.length = 1
-        resp.time = 2
-        return resp
+    #def cb_serv_go(self, value):
+        #resp = GoResponse()
+        #resp.length = 1
+        #resp.time = 2
+        #return resp
 
 if __name__ == '__main__':
     rospy.init_node('mgtu_teleop')
