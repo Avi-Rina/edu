@@ -73,6 +73,7 @@ class Teleop:
         resp.time = 2
         return resp
 
+
     def cb_serv_switch(self, req):
         """
         Переключает управление черепахой по её имени
