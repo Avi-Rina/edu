@@ -53,11 +53,6 @@ class Teleop:
             req = rospy.ServiceProxy('spawn', Spawn)
             self.tc += 1
 
-            '''
-            В целях более эффективной логики программы предлагаю в будущем исправить именование
-            черепах. Выгоднее называть их turtle{self.tc}, а не turtle_{self.tc}, поскольку самая первая 
-            черепаха называется turtle1.
-            '''
             res = req(
                 random.randrange(0, 11) + random.randrange(0, 100) / 100,
                 random.randrange(0, 11) + random.randrange(0, 100) / 100,

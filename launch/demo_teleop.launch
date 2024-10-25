@@ -1,0 +1,11 @@
+<launch>
+
+    <node pkg="turtlesim" type="turtlesim_node" name="simulator" output="screen">
+        <remap from="/turtle1/pose" to="/turtle_test/pose" />
+    </node>
+
+    <node pkg="mgtu_anm24" type="teleop.py" name="teleop" output="screen">
+        <param name="velocity" value="1.0" />
+    </node>
+
+</launch>
