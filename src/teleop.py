@@ -9,14 +9,12 @@ from turtlesim.srv import Spawn
 from turtlesim.srv import Kill
 from mgtu_anm24.srv import Go , GoResponse
 from mgtu_anm24.srv import Switch, SwitchResponse
-from dynamic_reconfigure.server import Server
-from mgtu_anm24.cfg import TeleopConfig
 
 target = [0, 0]
 velocity = 1.0
 
 class Teleop:
-    tc = 1
+    tc = 0
     current_turtle = "turtle1"  # Изначально управляем черепахой с именем turtle1, она появляется сразу
 
     def __init__(self) -> None:
@@ -25,13 +23,6 @@ class Teleop:
         self.pub = rospy.Publisher(f"/{self.current_turtle}/cmd_vel", Twist, queue_size=10)
         self.go_serv = rospy.Service('go', Go, self.cb_serv_go)
         self.switch_serv = rospy.Service('switch', Switch, self.cb_serv_switch) 
-        Server(TeleopConfig, self.reconf)
-
-    def reconf(self, config, level):
-        global velocity
-        velocity = config["velocity"]
-        return config
-
     def _t(self, event):
         global target
 
@@ -53,11 +44,16 @@ class Teleop:
             req = rospy.ServiceProxy('spawn', Spawn)
             self.tc += 1
 
+            '''
+            В целях более эффективной логики программы предлагаю в будущем исправить именование
+            черепах. Выгоднее называть их turtle{self.tc}, а не turtle_{self.tc}, поскольку самая первая 
+            черепаха называется turtle1.
+            '''
             res = req(
                 random.randrange(0, 11) + random.randrange(0, 100) / 100,
                 random.randrange(0, 11) + random.randrange(0, 100) / 100,
                 random.randrange(0, 314) / 100,
-                f"turtle{self.tc}"
+                f"turtle_{self.tc}"
             )
         except Exception as e:
             rospy.logwarn("Service call error: '%s'", e)
@@ -66,7 +62,7 @@ class Teleop:
         try:
             if self.tc > 0:
                 req = rospy.ServiceProxy('kill', Kill)
-                res = req(f"turtle{self.tc}")
+                res = req(f"turtle_{self.tc}")
                 self.tc -= 1
         except Exception as e:
             rospy.logwarn("Service call error: '%s'", e)
@@ -84,13 +80,12 @@ class Teleop:
         :return: Успешность переключения
         """
         self.current_turtle = req.turtle_name
-        self.pub.unregister()
         self.pub = rospy.Publisher(f"/{self.current_turtle}/cmd_vel", Twist, queue_size=10)
         rospy.loginfo(f"Switched control to {self.current_turtle}")
         return SwitchResponse(success=True)
 
 if __name__ == '__main__':
-    rospy.init_node('mgtu_teleop',anonymous=True)
+    rospy.init_node('mgtu_teleop')
     teleop = Teleop()
 
     velocity = rospy.get_param("~velocity", 1.0)
