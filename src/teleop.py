@@ -5,8 +5,7 @@ import random
 from geometry_msgs.msg import Twist
 from getkey import getkey
 from std_srvs.srv import Empty
-from turtlesim.srv import Spawn
-from turtlesim.srv import Kill
+from turtlesim.srv import Spawn, Kill, TeleportAbsolute
 from mgtu_anm24.srv import Go , GoResponse
 from mgtu_anm24.srv import Switch, SwitchResponse
 
@@ -67,12 +66,9 @@ class Teleop:
         except Exception as e:
             rospy.logwarn("Service call error: '%s'", e)
 
-    def cb_serv_go(self, value):
-        resp = GoResponse()
-        resp.length = 1
-        resp.time = 2
-        return resp
-
+    def cb_serv_go(self, req):
+        teleport_absolute = rospy.ServiceProxy(f'{self.current_turtle}/teleport_absolute', TeleportAbsolute)
+        teleport_absolute(req.x, req.y, target[1])
 
     def cb_serv_switch(self, req):
         """
